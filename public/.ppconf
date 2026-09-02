@@ -16,6 +16,11 @@ tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 # One .ppc file per line: absolute raw URL or path relative to this site.
 # A .ppc file holds ALL metadata about one repository:
 #   name, author, repo link, desc, style, version, size, rating, tags...
+# Extra optional fields (each becomes a button on the review card):
+#   release = link to a release / zip / exe      → 📦 RELEASE
+#   manual  = link to the manual / readme / docs → 📖 MANUAL
+#   embed   = any URL that can be iframed        → ▶ RUN EMBED (runs in-page)
+#   demo    = link to a live demo                → ► TRY DEMO (opens new tab)
 # Its clickable banner is auto-hunted at:
 #   https://raw.githubusercontent.com/OWNER/REPO/HEAD/pipisclub/banner.gif
 # (set "banner=" inside the .ppc to override; for THIS repo we hunt ./banner.gif)

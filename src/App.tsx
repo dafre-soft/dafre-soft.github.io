@@ -203,7 +203,6 @@ const PPC_EXAMPLE = `; anything.ppc  (drop it anywhere, link it in .ppconf)
 name    = SUPER KOOL REPO
 author  = webmaster
 repo    = https://github.com/OWNER/REPO
-demo    = https://owner.github.io/REPO   ; optional
 desc    = what this thing does. be honest.
         ; lines starting with whitespace continue the text
 style   = Neon Chaos 9000
@@ -212,6 +211,10 @@ size    = 640 KB
 added   = 11-30-1999
 rating  = 4.5        ; 0..5
 tags    = games;pipis;radical
+release = https://github.com/OWNER/REPO/releases/latest   ; optional → 📦 button
+manual  = https://owner.github.io/REPO/MANUAL.html        ; optional → 📖 button
+embed   = https://owner.github.io/REPO/                   ; optional → ▶ runs in-page
+demo    = https://owner.github.io/REPO/                   ; optional → opens new tab
 banner  =            ; optional! default hunt:
         ; <repo>/pipisclub/banner.gif  (via raw.githubusercontent.com)`;
 

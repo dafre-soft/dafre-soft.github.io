@@ -13,6 +13,9 @@ export interface PpcEntry {
   author: string;
   repo: string; // github repo url -> "Not-Demo version" button
   demo?: string; // optional live demo
+  release?: string; // link to a release (zip/exe/latest)
+  manual?: string; // link to the manual / readme / docs
+  embed?: string; // url that can be iframed right inside the review
   desc: string;
   style: string;
   version?: string;
@@ -181,6 +184,9 @@ export async function loadPpc(entry: PpcEntry): Promise<PpcEntry> {
       author: flat["author"] || flat["by"] || "anonymous netizen",
       repo: flat["repo"] || flat["url"] || flat["github"] || "",
       demo: flat["demo"] || undefined,
+      release: flat["release"] || flat["releases"] || undefined,
+      manual: flat["manual"] || flat["readme"] || flat["docs"] || undefined,
+      embed: flat["embed"] || flat["iframe"] || undefined,
       desc: flat["desc"] || flat["description"] || "no description supplied. mysterious!!",
       style: flat["style"] || "Unlabeled",
       version: flat["version"],
