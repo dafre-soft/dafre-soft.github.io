@@ -400,6 +400,16 @@ body {
   background: #000;
 }
 
+/* ---------- big shot mode ---------- */
+.bigshot-live {
+  animation: bigshotpulse 0.5s steps(2, end) infinite;
+}
+@keyframes bigshotpulse {
+  50% {
+    box-shadow: 0 0 0 3px var(--r), 8px 8px rgba(0, 0, 0, 0.85);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .blink,
   .blink-fast,
@@ -410,6 +420,7 @@ body {
   .spin-slow,
   .wiggle,
   .bounce-x,
+  .bigshot-live,
   .eq i,
   .starfield i,
   .sparkle {
