@@ -521,7 +521,7 @@ export default function App() {
               CopyBite 1999 eat fried pipis, avoid non-fried pipis
             </div>
             <button
-              className="mt-3 font-toon italic text-[13px] text-[#8888aa] hover:text-[#ffd900] transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+              className="mt-3 font-toon italic text-[13px] text-[#8888aa] hover:text-[#ffd900] transition-colors cursor-pointer"
               onClick={toggleBigshot}
               title={bigshotPlaying ? "click to silence the big shot" : "?"}
               aria-pressed={egg}
@@ -533,19 +533,7 @@ export default function App() {
               ) : (
                 "don't forget."
               )}
-              {bigshotPlaying && (
-                <span className="eq h-[14px] flex items-end" aria-hidden>
-                  {[0, 1, 2, 3].map((i) => (
-                    <i key={i} style={{ background: "var(--y)" }} />
-                  ))}
-                </span>
-              )}
             </button>
-            {bigshotPlaying && (
-              <div className="font-crt text-xl text-[#4dff4d] mt-2 blink">
-                ♪ NOW PLAYING: ./BIGSHOT.mp3 — IT'S A BEAUTIFUL DAY OUTSIDE...
-              </div>
-            )}
             {bigshotErr && <div className="font-crt text-xl text-[#ff3b1f] mt-2">✖ {bigshotErr}</div>}
           </div>
 

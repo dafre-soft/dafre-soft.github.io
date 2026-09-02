@@ -29,6 +29,47 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      /* raw-source detector: GitHub Pages cannot execute /src/main.tsx —
+         it serves .tsx as application/octet-stream and the browser blocks it.
+         If the app never mounts, show the deployment instructions. */
+      (function () {
+        var shown = false;
+        window.__ppcBootFail = function (reason) {
+          if (shown) return;
+          shown = true;
+          var r = document.getElementById("root");
+          if (!r) return;
+          r.innerHTML =
+            '<div style="min-height:100vh;background:#000080;color:#fff;font-family:VT323,Courier New,monospace;display:flex;align-items:center;justify-content:center;padding:24px">' +
+            '<div style="max-width:640px;width:100%;background:silver;color:#000;border:2px solid;border-color:#fff #4a4a4a #4a4a4a #fff;padding:3px">' +
+            '<div style="background:linear-gradient(90deg,#000080,#1084d0);color:#fff;font-family:Tahoma,Verdana,sans-serif;font-size:13px;font-weight:bold;padding:3px 6px">PIPISCLUB.EXE — Application Error</div>' +
+            '<div style="padding:16px;font-family:VT323,Courier New,monospace">' +
+            '<div style="font-size:26px;line-height:1.1;font-weight:bold">FATAL: you are browsing the RAW SOURCE of the club.</div>' +
+            '<div style="font-size:20px;margin-top:10px">GitHub Pages cannot run <b>/src/main.tsx</b> — it is served as<br><b>application/octet-stream</b> and your browser (correctly) refused it. ' +
+            (reason ? "<br>(" + reason + ")" : "") + "</div>" +
+            '<div style="font-size:20px;margin-top:14px;border:2px dashed #800000;padding:10px;background:#fff">' +
+            "FIX IT, NETIZEN:<br>1) npm install<br>2) npm run build<br>3) push the <b>dist/</b> folder to your GitHub Pages branch<br>&nbsp;&nbsp;&nbsp;(or point Pages at the /dist directory)<br>4) reload. the pipis will forgive you.</div>" +
+            '<div style="font-size:20px;margin-top:14px;text-align:center">* click anywhere to continue *</div>' +
+            "</div></div></div>";
+          document.addEventListener("click", function () {
+            location.reload();
+          });
+        };
+        window.addEventListener("error", function (e) {
+          if (e && e.target && e.target.tagName === "SCRIPT") window.__ppcBootFail("script load failed: " + (e.target.getAttribute("src") || "unknown"));
+        }, true);
+        /* the timer only makes sense while the raw /src/main.tsx tag exists —
+           in a built dist/ it is replaced by the bundle, so no false alarms */
+        document.addEventListener("DOMContentLoaded", function () {
+          if (document.querySelector('script[src*="main.tsx"]')) {
+            setTimeout(function () {
+              if (!window.__PPC_MOUNTED) window.__ppcBootFail("the app never mounted");
+            }, 7000);
+          }
+        });
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
