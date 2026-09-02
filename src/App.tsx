@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   fetchText,
   parseConf,
@@ -266,6 +266,49 @@ export default function App() {
   const [ppns, setPpns] = useState<PpnEntry[]>([]);
   const [modal, setModal] = useState<null | "gb">(null);
   const [egg, setEgg] = useState(false);
+  const [bigshotPlaying, setBigshotPlaying] = useState(false);
+  const [bigshotErr, setBigshotErr] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const toggleBigshot = () => {
+    const nextEgg = !egg;
+    setEgg(nextEgg);
+    setBigshotErr(null);
+    let a = audioRef.current;
+    if (!a) {
+      a = new Audio("BIGSHOT.mp3");
+      a.preload = "auto";
+      a.loop = true;
+      a.addEventListener("error", () => {
+        setBigshotPlaying(false);
+        setBigshotErr("BIGSHOT.mp3 not found — drop it next to index.html");
+      });
+      audioRef.current = a;
+    }
+    if (nextEgg) {
+      a.currentTime = 0;
+      const p = a.play();
+      if (p) {
+        p.then(() => setBigshotPlaying(true)).catch(() => {
+          setBigshotPlaying(false);
+          setBigshotErr("browser blocked the music — click again");
+        });
+      } else {
+        setBigshotPlaying(true);
+      }
+    } else {
+      a.pause();
+      a.currentTime = 0;
+      setBigshotPlaying(false);
+    }
+  };
+
+  useEffect(
+    () => () => {
+      audioRef.current?.pause();
+    },
+    []
+  );
 
   useEffect(() => {
     let live = true;
@@ -470,7 +513,7 @@ export default function App() {
           <PipisMascot size={44} className="hop mx-auto" />
           <div className="font-px text-[9px] text-[#00e5ff] mt-3">YOU HAVE REACHED THE BOTTOM OF THE INFORMATION SUPERHIGHWAY</div>
 
-          <div className="mt-5 panel inline-block px-6 py-4">
+          <div className={`mt-5 panel inline-block px-6 py-4${bigshotPlaying ? " bigshot-live" : ""}`}>
             <div className="font-toon font-bold text-[14px] text-white">
               © 1999 {conf?.name || "ThePipisClub"} — all pipis reserved.
             </div>
@@ -478,9 +521,10 @@ export default function App() {
               CopyBite 1999 eat fried pipis, avoid non-fried pipis
             </div>
             <button
-              className="mt-3 font-toon italic text-[13px] text-[#8888aa] hover:text-[#ffd900] transition-colors cursor-pointer"
-              onClick={() => setEgg((v) => !v)}
-              title="?"
+              className="mt-3 font-toon italic text-[13px] text-[#8888aa] hover:text-[#ffd900] transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+              onClick={toggleBigshot}
+              title={bigshotPlaying ? "click to silence the big shot" : "?"}
+              aria-pressed={egg}
             >
               {egg ? (
                 <span className="not-italic font-bold text-white">
@@ -489,7 +533,20 @@ export default function App() {
               ) : (
                 "don't forget."
               )}
+              {bigshotPlaying && (
+                <span className="eq h-[14px] flex items-end" aria-hidden>
+                  {[0, 1, 2, 3].map((i) => (
+                    <i key={i} style={{ background: "var(--y)" }} />
+                  ))}
+                </span>
+              )}
             </button>
+            {bigshotPlaying && (
+              <div className="font-crt text-xl text-[#4dff4d] mt-2 blink">
+                ♪ NOW PLAYING: ./BIGSHOT.mp3 — IT'S A BEAUTIFUL DAY OUTSIDE...
+              </div>
+            )}
+            {bigshotErr && <div className="font-crt text-xl text-[#ff3b1f] mt-2">✖ {bigshotErr}</div>}
           </div>
 
           <div className="font-toon text-[12px] text-[#8888aa] mt-5 space-y-0.5">
