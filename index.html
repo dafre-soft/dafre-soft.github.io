@@ -30,13 +30,19 @@
   <body>
     <div id="root"></div>
     <script>
-      /* raw-source detector: GitHub Pages cannot execute /src/main.tsx —
-         it serves .tsx as application/octet-stream and the browser blocks it.
-         If the app never mounts, show the deployment instructions. */
+      /* boot guard. shows the deployment screen ONLY when all of these hold:
+         1) not a dev server (vite dev/preview always run on a port — dev keeps its own error overlay)
+         2) #root is still empty (the app never managed to mount anything)
+         3) the failure is ours (the main.tsx entry or a /assets/ bundle — never extension scripts) */
       (function () {
+        var isDevServer = location.port !== "";
         var shown = false;
+        function rootEmpty() {
+          var r = document.getElementById("root");
+          return !r || r.childElementCount === 0;
+        }
         window.__ppcBootFail = function (reason) {
-          if (shown) return;
+          if (shown || !rootEmpty()) return;
           shown = true;
           var r = document.getElementById("root");
           if (!r) return;
@@ -49,23 +55,26 @@
             '<div style="font-size:20px;margin-top:10px">GitHub Pages cannot run <b>/src/main.tsx</b> — it is served as<br><b>application/octet-stream</b> and your browser (correctly) refused it. ' +
             (reason ? "<br>(" + reason + ")" : "") + "</div>" +
             '<div style="font-size:20px;margin-top:14px;border:2px dashed #800000;padding:10px;background:#fff">' +
-            "FIX IT, NETIZEN:<br>1) npm install<br>2) npm run build<br>3) push the <b>dist/</b> folder to your GitHub Pages branch<br>&nbsp;&nbsp;&nbsp;(or point Pages at the /dist directory)<br>4) reload. the pipis will forgive you.</div>" +
-            '<div style="font-size:20px;margin-top:14px;text-align:center">* click anywhere to continue *</div>' +
+            "FIX IT, NETIZEN:<br>1) npm install<br>2) npm run build<br>3) push the <b>contents of dist/</b> to your GitHub Pages branch<br>&nbsp;&nbsp;&nbsp;(or point Pages at the /dist directory)<br>4) reload. the pipis will forgive you.</div>" +
+            '<div style="margin-top:14px;text-align:center"><button onclick="location.reload()" style="font-family:inherit;font-size:20px;padding:4px 22px;cursor:pointer">↻ RELOAD</button></div>' +
             "</div></div></div>";
-          document.addEventListener("click", function () {
-            location.reload();
-          });
         };
+        if (isDevServer) return; // dev: vite's own overlay is in charge, stay out of the way
         window.addEventListener("error", function (e) {
-          if (e && e.target && e.target.tagName === "SCRIPT") window.__ppcBootFail("script load failed: " + (e.target.getAttribute("src") || "unknown"));
+          if (!rootEmpty()) return; // app is alive — never hijack
+          if (e && e.target && e.target.tagName === "SCRIPT") {
+            var src = e.target.getAttribute("src") || "";
+            if (/main\.tsx|(\/|^)assets\//.test(src)) window.__ppcBootFail("script load failed: " + src);
+          } else if (!e.target || e.target === window) {
+            window.__ppcBootFail("runtime error: " + (e.message || "unknown"));
+          }
         }, true);
-        /* the timer only makes sense while the raw /src/main.tsx tag exists —
-           in a built dist/ it is replaced by the bundle, so no false alarms */
+        /* raw-source pages still carry the /src/main.tsx tag; a built dist does not */
         document.addEventListener("DOMContentLoaded", function () {
           if (document.querySelector('script[src*="main.tsx"]')) {
             setTimeout(function () {
-              if (!window.__PPC_MOUNTED) window.__ppcBootFail("the app never mounted");
-            }, 7000);
+              if (!window.__PPC_MOUNTED && rootEmpty()) window.__ppcBootFail("the app never mounted");
+            }, 8000);
           }
         });
       })();
