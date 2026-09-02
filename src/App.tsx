@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   fetchText,
   parseConf,
@@ -11,7 +11,7 @@ import {
 } from "./lib/pp";
 import { Starfield, SparkleTrail, Reveal, Hazard, SectionTitle, PixelStar, PipisMascot } from "./fx";
 import { ReviewCard } from "./ReviewCard";
-import { HitCounter, PipisPoll, MidiPlayer, Webring, BadgeWall, Guestbook, Win95Modal } from "./widgets";
+import { HitCounter, PipisPoll, MidiPlayer, Webring, BadgeWall, Guestbook, ChatBox } from "./widgets";
 
 /* ================================================================
    ThePipisClub — index.html // (c)1999 CopyBite Industries
@@ -115,28 +115,50 @@ function Nav({ onGuestbook }: { onGuestbook: () => void }) {
   );
 }
 
-function SubsiteBox({ onOpen }: { onOpen: (name: string) => void }) {
-  const subs = ["PipisChat 2000", "PipisMail", "PipisTube", "PipisSearch", "PipisStocks"];
+function WebmasterCard() {
+  const Row = ({ label, children }: { label: string; children: ReactNode }) => (
+    <div className="flex items-baseline gap-1.5 py-0.5 border-b border-dotted border-[#888] last:border-0">
+      <span className="font-px text-[7px] shrink-0 text-[#333] uppercase">{label}</span>
+      <span className="ml-auto text-right min-w-0 break-all">{children}</span>
+    </div>
+  );
   return (
     <div className="w95 p-2">
-      <div className="font-px text-[8px] mb-2 text-center bg-[#800000] text-white py-1">THE PIPISCLUB NETWORK</div>
-      <div className="flex flex-col gap-1">
-        {subs.map((s) => (
-          <button key={s} className="btn95 text-[13px] text-left" onClick={() => onOpen(s)}>
-            ▚ {s} <span className="blink-fast text-[#c00000] text-[10px]">soon</span>
-          </button>
-        ))}
+      <div className="font-px text-[8px] mb-2 text-center bg-[#800000] text-white py-1">FIND THE WEBMASTER</div>
+      <div>
+        <Row label="e-mail">
+          <a className="lnk font-crt text-lg" href="mailto:webmaster@pipisclub.net">
+            webmaster@pipisclub.net
+          </a>
+        </Row>
+        <Row label="icq">
+          <span className="font-crt text-lg font-bold">
+            1337694 <span className="text-[#888]">(offline, always)</span>
+          </span>
+        </Row>
+        <Row label="github">
+          <a
+            className="lnk font-crt text-lg"
+            href="https://github.com/thepipisclub"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/thepipisclub
+          </a>
+        </Row>
+        <Row label="newgrounds">
+          <a className="lnk font-crt text-lg" href="https://www.newgrounds.com" target="_blank" rel="noopener noreferrer">
+            newgrounds.com
+          </a>
+        </Row>
+        <Row label="irc">
+          <span className="font-crt text-lg font-bold">#pipisclub @ irc.dal.net</span>
+        </Row>
       </div>
+      <div className="font-toon text-[10px] font-bold text-center mt-1.5">replies within 3-5 business decades</div>
     </div>
   );
 }
-
-const ACCOUNTS: Array<[string, string]> = [
-  ["GitHub", "https://github.com"],
-  ["Newgrounds", "https://www.newgrounds.com"],
-  ["YouTube", "https://www.youtube.com"],
-  ["Reddit", "https://www.reddit.com"],
-];
 const KOOL_LINKS: Array<[string, string]> = [
   ["Space Jam (1996)", "https://www.spacejam.com"],
   ["textfiles.com", "http://www.textfiles.com"],
@@ -242,7 +264,7 @@ export default function App() {
   const [confErr, setConfErr] = useState("");
   const [ppcs, setPpcs] = useState<PpcEntry[]>([]);
   const [ppns, setPpns] = useState<PpnEntry[]>([]);
-  const [modal, setModal] = useState<null | "gb" | string>(null);
+  const [modal, setModal] = useState<null | "gb">(null);
   const [egg, setEgg] = useState(false);
 
   useEffect(() => {
@@ -432,8 +454,8 @@ export default function App() {
 
         {/* ---- right rail ---- */}
         <aside id="links" className="space-y-4 order-3 scroll-mt-24 grid sm:grid-cols-2 lg:grid-cols-1 gap-4">
-          <SubsiteBox onOpen={(s) => setModal(s)} />
-          <LinkBox title="WEBMASTER'S ACCS (real)" links={ACCOUNTS} />
+          <ChatBox />
+          <WebmasterCard />
           <LinkBox title="K00L LINKS" links={KOOL_LINKS} />
           <Webring />
           <ConstructionBox />
@@ -487,23 +509,6 @@ export default function App() {
 
       {/* ======= MODALS ======= */}
       {modal === "gb" && <Guestbook onClose={() => setModal(null)} />}
-      {modal !== null && modal !== "gb" && (
-        <Win95Modal title={`C:\\PIPISCLUB\\${modal.replace(/\s/g, "").toUpperCase()}.EXE`} onClose={() => setModal(null)} width="max-w-md">
-          <div className="text-center">
-            <div className="hazard h-3 mb-3" />
-            <div className="font-px text-[11px] text-[#c00000]">ERR 503: {modal} NOT READY</div>
-            <PipisMascot size={60} className="hop mx-auto mt-3" />
-            <p className="font-toon font-bold text-[14px] mt-3 leading-snug">
-              this sub-site is still baking in the CopyBite oven. our top engineers (one guy named Gary) are on it.
-              check back after Y2K.
-            </p>
-            <button className="btn95 mt-4 text-[14px] px-6" onClick={() => setModal(null)}>
-              OK
-            </button>
-            <div className="hazard h-3 mt-4" />
-          </div>
-        </Win95Modal>
-      )}
     </div>
   );
 }
