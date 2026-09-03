@@ -230,13 +230,11 @@ export default function App() {
   const [modal, setModal] = useState<null | "gb">(null);
   const [egg, setEgg] = useState(false);
   const [bigshotPlaying, setBigshotPlaying] = useState(false);
-  const [bigshotErr, setBigshotErr] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const toggleBigshot = () => {
     const nextEgg = !egg;
     setEgg(nextEgg);
-    setBigshotErr(null);
     let a = audioRef.current;
     if (!a) {
       a = new Audio("BIGSHOT.mp3");
@@ -244,7 +242,6 @@ export default function App() {
       a.loop = true;
       a.addEventListener("error", () => {
         setBigshotPlaying(false);
-        setBigshotErr("BIGSHOT.mp3 not found — drop it next to index.html");
       });
       audioRef.current = a;
     }
@@ -254,7 +251,6 @@ export default function App() {
       if (p) {
         p.then(() => setBigshotPlaying(true)).catch(() => {
           setBigshotPlaying(false);
-          setBigshotErr("browser blocked the music — click again");
         });
       } else {
         setBigshotPlaying(true);
@@ -498,7 +494,6 @@ export default function App() {
                 "don't forget."
               )}
             </button>
-            {bigshotErr && <div className="font-crt text-xl text-[#ff3b1f] mt-2">✖ {bigshotErr}</div>}
           </div>
 
           <div className="font-toon text-[12px] text-[#8888aa] mt-5 space-y-0.5">

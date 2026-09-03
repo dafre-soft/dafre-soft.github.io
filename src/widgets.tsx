@@ -237,12 +237,26 @@ const BADGES: Array<[string, string, string]> = [
   ["MADE WITH", "NOTEPAD.EXE", "#3d0066"],
   ["FREE", "PIPIS 4 ALL", "#8a5a00"],
   ["100% CGI", "FREE ZONE", "#004a5f"],
+  ["IE 4.0", "TESTED", "#083a8a"],
+  ["W3C", "VALID HTML", "#004080"],
+  ["NO", "FRAMES!", "#8a0000"],
+  ["56K", "FRIENDLY", "#005050"],
+  ["GEOCITIES", "SURVIVOR", "#7a5f00"],
+  ["POWERED BY", "PIPIS OS", "#4a0066"],
+  ["ANTI", "POP-UP", "#006040"],
+  ["MIDI", "INSIDE ♪", "#660033"],
+  ["COOL", "SITE AWARD", "#806000"],
+  ["100% TABLE", "BASED LAYOUT", "#3a3a00"],
+  ["BLINK", "APPROVED", "#800040"],
+  ["UNDER", "CONSTRUCTION", "#905a00"],
 ];
 
 export function BadgeWall() {
   return (
     <div className="w95 p-2">
-      <div className="font-px text-[8px] mb-2 text-center">COOL BADGES</div>
+      <div className="font-px text-[8px] mb-2 text-center">
+        COOL BADGES <span className="text-[#c00000]">×{BADGES.length}</span>
+      </div>
       <div className="flex flex-wrap justify-center gap-1.5">
         {BADGES.map(([a, b, bg]) => (
           <div

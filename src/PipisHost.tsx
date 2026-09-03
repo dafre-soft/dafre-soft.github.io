@@ -22,7 +22,7 @@ async function checkAlive(url: string): Promise<PrjState> {
 
 function ProjectCard({ name }: { name: string }) {
   const url = prjUrl(name);
-  const sub = `${name.toLowerCase()}.pipisclub.net`;
+  const sub = `${name.toLowerCase()}.dafre-soft.github.io`;
   const [state, setState] = useState<PrjState>("checking");
   const [frameKey, setFrameKey] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -164,7 +164,7 @@ export function PipisHost({ names }: { names: string[] }) {
             <span className="font-crt text-xl text-[#4dff4d]">.ppconf</span>, add a name under{" "}
             <span className="font-crt text-xl">[pipishost]</span>, drop ur files at{" "}
             <span className="font-crt text-xl text-[#4dff4d]">pipishost/prjs/&lt;name&gt;/index.html</span> and boom —{" "}
-            <span className="font-crt text-xl">&lt;name&gt;.pipisclub.net</span> goes live on this very page.
+            <span className="font-crt text-xl">&lt;name&gt;.dafre-soft.github.io</span> goes live on this very page.
           </div>
         </div>
       ) : (
@@ -175,8 +175,8 @@ export function PipisHost({ names }: { names: string[] }) {
             ))}
           </div>
           <div className="font-toon text-[13px] font-bold text-[#8888aa] mt-3">
-            want <span className="text-[#ffd900]">&lt;ur-name&gt;.pipisclub.net</span>? one line under [pipishost] in
-            .ppconf — hosting is 100% free (paid in fried pipis).
+            want <span className="text-[#ffd900]">&lt;ur-name&gt;.dafre-soft.github.io</span>? one line under
+            [pipishost] in .ppconf — hosting is 100% free (paid in fried pipis).
           </div>
         </>
       )}
