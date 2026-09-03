@@ -4,7 +4,8 @@
 #                                                             #
 #   index.html reads THIS file on every page load.            #
 #   Lines starting with # are comments. Sections: [site],     #
-#   [ppc] (repository reviews) and [newz] (news posts).       #
+#   [ppc] (repository reviews), [newz] (news posts) and       #
+#   [pipishost] (hosted sub-sites).                           #
 ###############################################################
 
 [site]
@@ -16,6 +17,11 @@ tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 # One .ppc file per line: absolute raw URL or path relative to this site.
 # A .ppc file holds ALL metadata about one repository:
 #   name, author, repo link, desc, style, version, size, rating, tags...
+# Extra optional fields (each becomes a button on the review card):
+#   release = link to a release / zip / exe      → 📦 RELEASE
+#   manual  = link to the manual / readme / docs → 📖 MANUAL
+#   embed   = any URL that can be iframed        → ▶ RUN EMBED (runs in-page)
+#   demo    = link to a live demo                → ► TRY DEMO (opens new tab)
 # Its clickable banner is auto-hunted at:
 #   https://raw.githubusercontent.com/OWNER/REPO/HEAD/pipisclub/banner.gif
 # (set "banner=" inside the .ppc to override; for THIS repo we hunt ./banner.gif)
@@ -30,3 +36,13 @@ tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 # examples:
 # ./Newz/1999-11-30_we-are-online.ppn
 # ./Newz/1999-12-24_y2k-prep.ppn
+
+[pipishost]
+# Free sub-site hosting. One NAME per line.
+# Each name becomes <name>.pipisclub.net on the main page and is
+# served from ./pipishost/prjs/<name>/index.html (your own .js/.css
+# sit next to it and load as usual).
+#
+# examples:
+# coolsite
+# garys-page

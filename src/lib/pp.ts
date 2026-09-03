@@ -13,6 +13,9 @@ export interface PpcEntry {
   author: string;
   repo: string; // github repo url -> "Not-Demo version" button
   demo?: string; // optional live demo
+  release?: string; // link to a release (zip/exe/latest)
+  manual?: string; // link to the manual / readme / docs
+  embed?: string; // url that can be iframed right inside the review
   desc: string;
   style: string;
   version?: string;
@@ -40,6 +43,7 @@ export interface SiteConf {
   tagline: string;
   ppcUrls: string[];
   ppnUrls: string[];
+  pipishost: string[]; // subdomain names -> pipishost/prjs/<name>/index.html
 }
 
 /* ---------- tiny INI-ish parser ----------
@@ -113,6 +117,7 @@ export function parseConf(text: string): SiteConf {
     tagline: site.tagline || "",
     ppcUrls: collect("ppc"),
     ppnUrls: collect("newz"),
+    pipishost: collect("pipishost").map((n) => n.replace(/^\/+|\/+$/g, "")).filter(Boolean),
   };
 }
 
@@ -145,6 +150,12 @@ export function bannerFor(repo: string, explicit?: string): string {
     if (raw) return raw;
   }
   return abs("banner.gif");
+}
+
+/** PipisHost™: subdomain name -> ./pipishost/prjs/<name>/index.html */
+export function prjUrl(name: string): string {
+  const clean = name.trim().replace(/^\/+|\/+$/g, "");
+  return abs(`pipishost/prjs/${clean}/index.html`);
 }
 
 /* ---------- fetchers ---------- */
@@ -181,6 +192,9 @@ export async function loadPpc(entry: PpcEntry): Promise<PpcEntry> {
       author: flat["author"] || flat["by"] || "anonymous netizen",
       repo: flat["repo"] || flat["url"] || flat["github"] || "",
       demo: flat["demo"] || undefined,
+      release: flat["release"] || flat["releases"] || undefined,
+      manual: flat["manual"] || flat["readme"] || flat["docs"] || undefined,
+      embed: flat["embed"] || flat["iframe"] || undefined,
       desc: flat["desc"] || flat["description"] || "no description supplied. mysterious!!",
       style: flat["style"] || "Unlabeled",
       version: flat["version"],
