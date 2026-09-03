@@ -55,10 +55,11 @@
             '<div style="font-size:20px;margin-top:10px">GitHub Pages cannot run <b>/src/main.tsx</b> — it is served as<br><b>application/octet-stream</b> and your browser (correctly) refused it. ' +
             (reason ? "<br>(" + reason + ")" : "") + "</div>" +
             '<div style="font-size:20px;margin-top:14px;border:2px dashed #800000;padding:10px;background:#fff">' +
-            "FIX IT, NETIZEN (no manual build needed):<br>1) this repo already ships <b>.github/workflows/deploy-pages.yml</b><br>" +
-            "2) Settings → Pages → Build and deployment → Source: <b>GitHub Actions</b><br>" +
-            "3) every push now builds dist/ and deploys it by itself<br>" +
-            "4) reload. the pipis will forgive you.</div>" +
+            "IT FIXES ITSELF — no settings, no manual build:<br>" +
+            "1) this repo ships <b>.github/workflows/publish.yml</b><br>" +
+            "2) every push builds the club and commits the built site to the <b>root of this branch</b><br>" +
+            "3) wait ~1 minute for the workflow, then <b>hard reload</b> (Ctrl+F5)<br>" +
+            "4) if it never runs: check the <b>Actions</b> tab (is Actions enabled for the repo?)</div>" +
             '<div style="margin-top:14px;text-align:center"><button onclick="location.reload()" style="font-family:inherit;font-size:20px;padding:4px 22px;cursor:pointer">↻ RELOAD</button></div>' +
             "</div></div></div>";
         };

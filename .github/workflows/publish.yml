@@ -1,0 +1,76 @@
+name: publish-built-site
+
+# ================================================================
+#  THE PIPISCLUB SELF-DEPLOYER
+#
+#  Every push -> restore the vite entry -> npm run build -> commit
+#  the built site to the ROOT of the branch. GitHub Pages
+#  (main / root) then serves a WORKING site with ZERO settings.
+#
+#  - commit is tagged [skip ci] => the workflow never loops
+#  - banner.gif / BIGSHOT.mp3 / pipishost/ / your .ppconf in the
+#    repo root are NEVER overwritten (yours always win)
+#  - the entry page is rebuilt from whatever index.html is in the
+#    branch: if it is a PREVIOUS built page, the bundle tags are
+#    swapped back to /src/main.tsx first, so source changes in
+#    src/ always reach the published site.
+# ================================================================
+
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: restore the vite entry page
+        run: |
+          # if the committed index.html is a previous build (bundle tags),
+          # turn it back into the dev entry. on a fresh source repo this
+          # sed simply matches nothing.
+          sed -i 's|<script type="module" crossorigin src="/assets/[^"]*"></script>|<script type="module" src="/src/main.tsx"></script>|' index.html
+          sed -i 's|<link rel="stylesheet" crossorigin href="/assets/[^"]*">||g' index.html
+
+      - name: install + build
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+
+      - name: publish dist/ to repo root
+        run: |
+          # fresh assets/ every time (old hashed bundles get cleaned out)
+          rm -rf assets
+          mkdir -p assets
+          cp -r dist/assets/. assets/
+
+          # the built page replaces the entry page
+          cp dist/index.html index.html
+
+          # .ppconf: install ours ONLY if the repo has none — an existing
+          # .ppconf in the root (yours, edited by hand) always wins
+          cp -n dist/.ppconf ./.ppconf || true
+
+          git config user.name "pipisbot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html assets .ppconf
+
+          if git diff --staged --quiet; then
+            echo "nothing changed — already up to date"
+          else
+            git commit -m "publish built site [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
