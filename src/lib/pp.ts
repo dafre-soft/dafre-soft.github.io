@@ -43,6 +43,7 @@ export interface SiteConf {
   tagline: string;
   ppcUrls: string[];
   ppnUrls: string[];
+  pipishost: string[]; // subdomain names -> pipishost/prjs/<name>/index.html
 }
 
 /* ---------- tiny INI-ish parser ----------
@@ -116,6 +117,7 @@ export function parseConf(text: string): SiteConf {
     tagline: site.tagline || "",
     ppcUrls: collect("ppc"),
     ppnUrls: collect("newz"),
+    pipishost: collect("pipishost").map((n) => n.replace(/^\/+|\/+$/g, "")).filter(Boolean),
   };
 }
 
@@ -148,6 +150,12 @@ export function bannerFor(repo: string, explicit?: string): string {
     if (raw) return raw;
   }
   return abs("banner.gif");
+}
+
+/** PipisHost™: subdomain name -> ./pipishost/prjs/<name>/index.html */
+export function prjUrl(name: string): string {
+  const clean = name.trim().replace(/^\/+|\/+$/g, "");
+  return abs(`pipishost/prjs/${clean}/index.html`);
 }
 
 /* ---------- fetchers ---------- */

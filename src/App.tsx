@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   fetchText,
   parseConf,
@@ -11,7 +11,8 @@ import {
 } from "./lib/pp";
 import { Starfield, SparkleTrail, Reveal, Hazard, SectionTitle, PixelStar, PipisMascot } from "./fx";
 import { ReviewCard } from "./ReviewCard";
-import { HitCounter, PipisPoll, MidiPlayer, Webring, BadgeWall, Guestbook, ChatBox } from "./widgets";
+import { PipisHost } from "./PipisHost";
+import { HitCounter, PipisPoll, MidiPlayer, Webring, BadgeWall, Guestbook } from "./widgets";
 
 /* ================================================================
    ThePipisClub — index.html // (c)1999 CopyBite Industries
@@ -24,6 +25,7 @@ const TICKER_DEFAULTS = [
   "SIGN THE GUESTBOOK OR THE PIPIS GETS IT",
   "BEST VIEWED @ 800×600 WITH SOUND ON",
   "NOW HIRING: webmaster (unpaid, in pipis)",
+  "FREE SUB-SITE HOSTING @ PIPISHOST™ — BRING UR OWN HTML",
 ];
 
 function SiteBanner({ conf }: { conf: SiteConf | null }) {
@@ -92,6 +94,7 @@ function Nav({ onGuestbook }: { onGuestbook: () => void }) {
     ["HOME", "#top"],
     ["REVIEWS", "#reviews"],
     ["NEWZ", "#newz"],
+    ["HOSTING", "#pipishost"],
     ["THE .PPC FILE", "#about"],
     ["LINKS", "#links"],
   ];
@@ -115,50 +118,7 @@ function Nav({ onGuestbook }: { onGuestbook: () => void }) {
   );
 }
 
-function WebmasterCard() {
-  const Row = ({ label, children }: { label: string; children: ReactNode }) => (
-    <div className="flex items-baseline gap-1.5 py-0.5 border-b border-dotted border-[#888] last:border-0">
-      <span className="font-px text-[7px] shrink-0 text-[#333] uppercase">{label}</span>
-      <span className="ml-auto text-right min-w-0 break-all">{children}</span>
-    </div>
-  );
-  return (
-    <div className="w95 p-2">
-      <div className="font-px text-[8px] mb-2 text-center bg-[#800000] text-white py-1">FIND THE WEBMASTER</div>
-      <div>
-        <Row label="e-mail">
-          <a className="lnk font-crt text-lg" href="mailto:webmaster@pipisclub.net">
-            webmaster@pipisclub.net
-          </a>
-        </Row>
-        <Row label="icq">
-          <span className="font-crt text-lg font-bold">
-            1337694 <span className="text-[#888]">(offline, always)</span>
-          </span>
-        </Row>
-        <Row label="github">
-          <a
-            className="lnk font-crt text-lg"
-            href="https://github.com/thepipisclub"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            github.com/thepipisclub
-          </a>
-        </Row>
-        <Row label="newgrounds">
-          <a className="lnk font-crt text-lg" href="https://www.newgrounds.com" target="_blank" rel="noopener noreferrer">
-            newgrounds.com
-          </a>
-        </Row>
-        <Row label="irc">
-          <span className="font-crt text-lg font-bold">#pipisclub @ irc.dal.net</span>
-        </Row>
-      </div>
-      <div className="font-toon text-[10px] font-bold text-center mt-1.5">replies within 3-5 business decades</div>
-    </div>
-  );
-}
+
 const KOOL_LINKS: Array<[string, string]> = [
   ["Space Jam (1996)", "https://www.spacejam.com"],
   ["textfiles.com", "http://www.textfiles.com"],
@@ -237,10 +197,10 @@ function AboutSection() {
           <div className="font-px text-[10px] text-[#ffd900] mb-2">STEP 1 — .ppconf</div>
           The whole club runs on ONE file at the site root:{" "}
           <span className="font-crt text-lg text-[#4dff4d]">.ppconf</span>. It lists links to{" "}
-          <b className="text-[#ffd900]">.ppc</b> files under <span className="font-crt text-lg">[ppc]</span> and{" "}
-          <b className="text-[#ffd900]">.ppn</b> newz files under <span className="font-crt text-lg">[newz]</span>.
-          Edit it and this page re-wires itself on reload. No database. No framework brainrot. Just vibes and
-          fetch().
+          <b className="text-[#ffd900]">.ppc</b> files under <span className="font-crt text-lg">[ppc]</span>,{" "}
+          <b className="text-[#ffd900]">.ppn</b> newz files under <span className="font-crt text-lg">[newz]</span> and
+          subdomain names under <span className="font-crt text-lg">[pipishost]</span>. Edit it and this page re-wires
+          itself on reload. No database. No framework brainrot. Just vibes and fetch().
         </div>
         <div>
           <div className="font-px text-[10px] text-[#ffd900] mb-2">STEP 2 — write a .ppc</div>
@@ -494,14 +454,15 @@ export default function App() {
             </div>
           </Reveal>
 
+          {/* PIPISHOST */}
+          <PipisHost names={conf?.pipishost ?? []} />
+
           {/* ABOUT / docs */}
           <AboutSection />
         </div>
 
         {/* ---- right rail ---- */}
         <aside id="links" className="space-y-4 order-3 scroll-mt-24 grid sm:grid-cols-2 lg:grid-cols-1 gap-4">
-          <ChatBox />
-          <WebmasterCard />
           <LinkBox title="K00L LINKS" links={KOOL_LINKS} />
           <Webring />
           <ConstructionBox />
