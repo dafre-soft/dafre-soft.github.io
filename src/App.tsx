@@ -29,10 +29,25 @@ const TICKER_DEFAULTS = [
 ];
 
 function SiteBanner({ conf }: { conf: SiteConf | null }) {
-  const [gifOk, setGifOk] = useState(true);
+  // probe with fetch HEAD: a fetch 404 stays out of the console,
+  // unlike a blind <img src="banner.gif"> which logs a red network error
+  const [gifState, setGifState] = useState<"checking" | "ok" | "missing">("checking");
+  useEffect(() => {
+    let live = true;
+    fetch("banner.gif", { method: "HEAD", cache: "no-store" })
+      .then((r) => {
+        if (live) setGifState(r.ok ? "ok" : "missing");
+      })
+      .catch(() => {
+        if (live) setGifState("missing");
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
   const href = conf?.github || "#top";
 
-  if (gifOk) {
+  if (gifState === "ok") {
     return (
       <a href={href} target={conf?.github ? "_blank" : undefined} rel="noopener noreferrer" className="block" title="our banner.gif — click it!">
         <img
@@ -40,7 +55,7 @@ function SiteBanner({ conf }: { conf: SiteConf | null }) {
           alt="ThePipisClub banner"
           className="w-full block"
           style={{ imageRendering: "pixelated" }}
-          onError={() => setGifOk(false)}
+          onError={() => setGifState("missing")}
         />
       </a>
     );
