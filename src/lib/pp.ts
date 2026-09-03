@@ -165,6 +165,25 @@ export async function fetchText(url: string): Promise<string> {
   return res.text();
 }
 
+/**
+ * The conf hunt: .ppconf first (canonical), then the dotless twin
+ * ppconf.txt — because GitHub Pages + Jekyll and some static hosts
+ * refuse to serve dotfiles. Returns which file actually answered.
+ */
+export async function loadConf(): Promise<{ text: string; used: string }> {
+  const candidates = [".ppconf", "ppconf.txt"];
+  let lastErr = "";
+  for (const name of candidates) {
+    try {
+      const text = await fetchText(name);
+      return { text, used: name };
+    } catch (e) {
+      lastErr = e instanceof Error ? e.message : "fetch failed";
+    }
+  }
+  throw new Error(`neither ${candidates.join(" nor ")} answered (${lastErr})`);
+}
+
 export function makePpc(src: string): PpcEntry {
   return {
     src,

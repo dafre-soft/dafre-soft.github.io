@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  fetchText,
+  loadConf,
   parseConf,
   makePpc,
   loadPpc,
@@ -215,7 +215,10 @@ function AboutSection() {
           <b className="text-[#ffd900]">.ppc</b> files under <span className="font-crt text-lg">[ppc]</span>,{" "}
           <b className="text-[#ffd900]">.ppn</b> newz files under <span className="font-crt text-lg">[newz]</span> and
           subdomain names under <span className="font-crt text-lg">[pipishost]</span>. Edit it and this page re-wires
-          itself on reload. No database. No framework brainrot. Just vibes and fetch().
+          itself on reload. No database. No framework brainrot. Just vibes and fetch(). If your host hides dotfiles
+          (GitHub Pages + Jekyll does!), drop an empty{" "}
+          <span className="font-crt text-lg text-[#ffd900]">.nojekyll</span> in the root — the club also falls back
+          to the dotless twin <span className="font-crt text-lg text-[#4dff4d]">ppconf.txt</span>.
         </div>
         <div>
           <div className="font-px text-[10px] text-[#ffd900] mb-2">STEP 2 — write a .ppc</div>
@@ -240,6 +243,7 @@ export default function App() {
   const [conf, setConf] = useState<SiteConf | null>(null);
   const [confStatus, setConfStatus] = useState<"loading" | "ok" | "error">("loading");
   const [confErr, setConfErr] = useState("");
+  const [confFile, setConfFile] = useState(".ppconf");
   const [ppcs, setPpcs] = useState<PpcEntry[]>([]);
   const [ppns, setPpns] = useState<PpnEntry[]>([]);
   const [modal, setModal] = useState<null | "gb">(null);
@@ -288,10 +292,11 @@ export default function App() {
     let live = true;
     (async () => {
       try {
-        const text = await fetchText(".ppconf");
+        const { text, used } = await loadConf();
         const c = parseConf(text);
         if (!live) return;
         setConf(c);
+        setConfFile(used);
         setConfStatus("ok");
 
         const starters = c.ppcUrls.map(makePpc);
@@ -360,7 +365,7 @@ export default function App() {
                 C:\&gt; read .ppconf ...{" "}
                 {confStatus === "loading" && <span className="blink">CONNECTING 28.8kbps▊</span>}
                 {confStatus === "error" && <span className="text-[#ff3b1f]">ERROR {confErr}</span>}
-                {confStatus === "ok" && `OK! ${conf?.ppcUrls.length ?? 0} .ppc link(s) found`}
+                {confStatus === "ok" && `OK! (${confFile}) ${conf?.ppcUrls.length ?? 0} .ppc link(s) found`}
               </span>
             </div>
 
@@ -380,11 +385,14 @@ export default function App() {
 
                 {confStatus === "error" && (
                   <div className="panel panel-red p-5">
-                    <div className="font-px text-[11px] text-[#ff3b1f] mb-2">✖ .ppconf NOT FOUND ✖</div>
+                    <div className="font-px text-[11px] text-[#ff3b1f] mb-2">✖ CONF NOT FOUND ✖</div>
                     <div className="font-toon font-bold text-[14px]">
-                      {confErr} — the master wire-up file must live at the site root as{" "}
-                      <span className="font-crt text-lg text-[#ffd900]">.ppconf</span>. without it the club has no
-                      clubs.
+                      {confErr}. The club looks for{" "}
+                      <span className="font-crt text-lg text-[#ffd900]">.ppconf</span> at the site root, then the
+                      dotless twin <span className="font-crt text-lg text-[#ffd900]">ppconf.txt</span>. On GitHub
+                      Pages you usually also need an empty{" "}
+                      <span className="font-crt text-lg text-[#ffd900]">.nojekyll</span> file in the root, or Jekyll
+                      silently eats the dotfile.
                     </div>
                   </div>
                 )}

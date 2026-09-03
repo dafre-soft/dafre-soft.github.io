@@ -1,3 +1,2 @@
-# .nojekyll — tells GitHub Pages to serve this repo raw (no Jekyll build).
-# Without it Jekyll silently drops every dotfile (.ppconf, .github, ...)
-# and the club loses its brain. DO NOT DELETE.
+# GitHub Pages: do NOT run Jekyll over this branch.
+# Jekyll silently eats dotfiles (.ppconf!) — this file stops that.
