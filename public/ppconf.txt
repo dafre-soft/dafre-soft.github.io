@@ -8,7 +8,7 @@
 
 [site]
 name    = ThePipisClub
-github  = https://github.com/thepipisclub/thepipisclub.github.io
+github  = https://github.com/dafre-soft/dafre-soft.github.io/
 tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 
 [ppc]
