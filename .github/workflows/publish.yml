@@ -10,6 +10,8 @@ name: publish-built-site
 #  - commit is tagged [skip ci] => the workflow never loops
 #  - banner.gif / BIGSHOT.mp3 / pipishost/ / your .ppconf in the
 #    repo root are NEVER overwritten (yours always win)
+#  - .nojekyll is added so GitHub Pages stops eating dotfiles,
+#    and the dotless twin ppconf.txt is auto-synced from .ppconf
 #  - the entry page is rebuilt from whatever index.html is in the
 #    branch: if it is a PREVIOUS built page, the bundle tags are
 #    swapped back to /src/main.tsx first, so source changes in
@@ -64,9 +66,17 @@ jobs:
           # .ppconf in the root (yours, edited by hand) always wins
           cp -n dist/.ppconf ./.ppconf || true
 
+          # .nojekyll: stops GitHub Pages from running Jekyll over the
+          # branch, which would silently drop every dotfile (.ppconf!)
+          touch .nojekyll
+
+          # keep the dotless twin in sync, so hosts that hide dotfiles
+          # can still read the config
+          cp -f ./.ppconf ./ppconf.txt
+
           git config user.name "pipisbot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html assets .ppconf
+          git add index.html assets .ppconf ppconf.txt .nojekyll
 
           if git diff --staged --quiet; then
             echo "nothing changed — already up to date"

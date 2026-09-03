@@ -1,13 +1,9 @@
 ###############################################################
-#   .PPCONF  --  ThePipisClub master wire-up file             #
-#   format v1.0 // (c)1999 CopyBite Industries                #
-#                                                             #
-#   index.html reads THIS file on every page load (falls      #
-#   back to the dotless twin ppconf.txt if the host hides     #
-#   dotfiles — the publish workflow auto-syncs the twin).     #
-#   Lines starting with # are comments. Sections: [site],     #
-#   [ppc] (repository reviews), [newz] (news posts) and       #
-#   [pipishost] (hosted sub-sites).                           #
+#   PPCONF.TXT -- the dotless twin of .PPCONF                 #
+#   (some hosts / GitHub Pages+Jekyll refuse to serve         #
+#    dotfiles, so the club reads .ppconf first and falls      #
+#    back to THIS file. The publish workflow keeps this       #
+#    twin in sync with .ppconf automatically — edit .ppconf.) #
 ###############################################################
 
 [site]
@@ -41,7 +37,7 @@ tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 
 [pipishost]
 # Free sub-site hosting. One NAME per line.
-# Each name becomes <name>.pipisclub.net on the main page and is
+# Each name becomes <name>.dafre-soft.github.io on the main page and is
 # served from ./pipishost/prjs/<name>/index.html (your own .js/.css
 # sit next to it and load as usual).
 #
