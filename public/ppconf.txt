@@ -30,7 +30,7 @@ tagline = THE #1 UNDERGROUND REPO REVIEW ZINE OF THE INFORMATION SUPERHIGHWAY
 
 [newz]
 # One .ppn file per line -- news posts live in the /Newz folder.
-#
+https://raw.githubusercontent.com/dafre-soft/dafre-soft.github.io/refs/heads/main/newz/pipoz.ppn
 # examples:
 # ./Newz/1999-11-30_we-are-online.ppn
 # ./Newz/1999-12-24_y2k-prep.ppn
